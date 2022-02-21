@@ -1,0 +1,12 @@
+.LoginForm{
+  &__form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__input,
+  &__password {
+    width: 200px;
+  }
+}
