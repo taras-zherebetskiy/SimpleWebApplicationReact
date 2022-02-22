@@ -4,9 +4,7 @@ type Movie = {
   title: string;
   description: string;
   imgUrl: string;
-  imdbUrl: string;
   imdbId: string;
-  price?: number;
 };
 
 type User = {
@@ -18,6 +16,8 @@ type User = {
 
 type RootState = {
   user: User | null;
+  newMovies: Movie[];
+  moviesList: Movie[];
 };
 
 type logPass = {

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { MovieCard } from '../MovieCard';
 import './MovieList.scss';
 
-import moviesFromServer from '../../api/movies.json';
-
 export const MovieList: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
-    setMovies(moviesFromServer);
+    const moviesFromLocal: Movie[] = JSON.parse(localStorage.getItem('movies') || '[]');
+
+    setMovies(moviesFromLocal);
   }, []);
 
   return (

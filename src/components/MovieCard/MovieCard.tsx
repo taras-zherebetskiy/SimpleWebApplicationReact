@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import './MovieCard.scss';
@@ -22,7 +20,7 @@ export const MovieCard: React.FC<Props> = ({ movie }) => {
   }
 
   return (
-    <Card sx={{ width: 345 }}>
+    <Card className="MovieCard">
       <CardMedia
         component="img"
         height="140"
@@ -37,9 +35,6 @@ export const MovieCard: React.FC<Props> = ({ movie }) => {
           {description}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button size="small">Buy</Button>
-      </CardActions>
     </Card>
   );
 };

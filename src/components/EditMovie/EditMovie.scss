@@ -1,0 +1,27 @@
+.EditMovie {
+  padding-left: 20px;
+  flex-grow: 1;
+
+  &__form {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  &__description {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__textarea {
+    height: 250px;
+    width: 200px;
+    resize: none;
+
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+  }
+
+  &__button:first-of-type {
+    margin-right: 20px;
+  }
+}

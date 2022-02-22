@@ -10,10 +10,12 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { setUser } from '../../store/actions';
 import './LoginForm.scss';
 
 export const LoginForm: React.FC = () => {
+  const navigate = useNavigate();
   const [isVisiblePassword, setVisiblePassword] = useState(false);
   const [isError, setError] = useState(false);
   const [values, setValues] = useState<logPass>({
@@ -25,7 +27,7 @@ export const LoginForm: React.FC = () => {
   const handlerLogIn = () => {
     const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
     const logInUser = users.find(userFind => {
-      if (userFind.login === values.login
+      if (userFind.login === values.login.toLowerCase()
         && userFind.password === values.password) {
         return true;
       }
@@ -36,6 +38,7 @@ export const LoginForm: React.FC = () => {
     if (logInUser) {
       dispatch(setUser(logInUser));
       setError(false);
+      navigate('/movie_list');
     } else {
       setError(true);
     }
@@ -99,7 +102,7 @@ export const LoginForm: React.FC = () => {
       </form>
       {
         isError
-        && <span>Can&apos;t find user</span>
+        && <span className="LoginForm__error">Can&apos;t find user</span>
       }
 
     </div>

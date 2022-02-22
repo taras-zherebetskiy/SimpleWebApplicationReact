@@ -1,0 +1,10 @@
+.EditPage {
+  &__list {
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+    margin-bottom: 20px;
+  }
+}

@@ -8,12 +8,16 @@ import {
   Button,
 } from '@mui/material';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { setUser } from '../../store/actions';
 import { getUser } from '../../store/selectors';
 import './Profile.scss';
 
 export const Profile: React.FC = () => {
+  const navigate = useNavigate();
   const user = useSelector(getUser);
+  const dispatch = useDispatch();
   const [values, setValues] = useState<newPass>({
     oldPass: '',
     newPass: '',
@@ -22,17 +26,27 @@ export const Profile: React.FC = () => {
     viewOldPass: false,
     viewNewPass: false,
   });
+  const [message, setMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   const isValid = () => {
     if (values.oldPass !== user?.password) {
-      setErrorMessage('incorect old password');
+      setErrorMessage('Incorect old password');
+      setValues(prevValue => ({ ...prevValue, errorOldPass: true }));
+
+      return false;
+    }
+
+    if (values.newPass.length < 8) {
+      setErrorMessage('Password must be longer than 8 chars');
+      setValues(prevValue => ({ ...prevValue, errorNewPass: true }));
 
       return false;
     }
 
     if (values.newPass === user?.password) {
       setErrorMessage('New password same');
+      setValues(prevValue => ({ ...prevValue, errorNewPass: true }));
 
       return false;
     }
@@ -40,13 +54,62 @@ export const Profile: React.FC = () => {
     return true;
   };
 
+  const setGoodMessage = () => {
+    setMessage('Your password was change');
+  };
+
+  const changePass = () => {
+    const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
+    const newUsers = users.map(userProfile => {
+      if (userProfile.login === user?.login
+        && userProfile.password === user?.password) {
+        dispatch(setUser({
+          ...user,
+          password: values.newPass,
+        }));
+
+        return {
+          ...user,
+          password: values.newPass,
+        };
+      }
+
+      return userProfile;
+    });
+
+    localStorage.setItem('users', JSON.stringify(newUsers));
+  };
+
+  const resetInputs = () => {
+    setValues({
+      oldPass: '',
+      newPass: '',
+      errorOldPass: false,
+      errorNewPass: false,
+      viewOldPass: false,
+      viewNewPass: false,
+    });
+  };
+
   const handleClickShowPassword = (key: keyof newPass) => () => {
-    setValues(prevValue => ({ ...prevValue, [key]: !prevValue[key] }));
+    setValues(prevValue => ({
+      ...prevValue,
+      [key]: !prevValue[key],
+      errorNewPass: false,
+      errorOldPass: false,
+    }));
+    setMessage('');
     setErrorMessage('');
   };
 
   const handleChange = (key: keyof newPass) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [key]: event.target.value });
+    setValues({
+      ...values,
+      [key]: event.target.value,
+      errorNewPass: false,
+      errorOldPass: false,
+    });
+    setMessage('');
     setErrorMessage('');
   };
 
@@ -55,19 +118,43 @@ export const Profile: React.FC = () => {
   };
 
   const handlerSubmit = () => {
-    isValid();
+    if (isValid()) {
+      resetInputs();
+      setGoodMessage();
+      changePass();
+    }
+  };
+
+  const handlerLogOut = () => {
+    dispatch(setUser(null));
   };
 
   if (!user) {
+    navigate('/login');
+
     return (
-      <span>Please log in</span>
+      <div className="Profile">
+        <h1>Please log in</h1>
+      </div>
     );
   }
 
   return (
     <div className="Profile">
-      <h1>{user.name}</h1>
+      <h1>Profile</h1>
+      <div className="Profile__container">
+        <h3>{user.name}</h3>
+        <Button
+          className="Profile__logout"
+          variant="contained"
+          onClick={handlerLogOut}
+        >
+          Log out
+        </Button>
+      </div>
       <form className="Profile__form">
+        <h3>Change password</h3>
+
         <FormControl
           variant="standard"
           className="Profile__password"
@@ -116,15 +203,14 @@ export const Profile: React.FC = () => {
             )}
           />
         </FormControl>
-
-        <span className="Profile__error">{errorMessage}</span>
-
         <Button
           variant="contained"
           onClick={handlerSubmit}
         >
           Save
         </Button>
+        <span className="Profile__error">{errorMessage}</span>
+        <span className="Profile__message">{message}</span>
       </form>
     </div>
   );

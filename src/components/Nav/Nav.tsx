@@ -9,7 +9,7 @@ export const Nav: React.FC = () => {
 
   return (
     <div className="Nav">
-      <NavLink to="/" className="Nav__link Nav__link--is-active">
+      <NavLink to="/" className="Nav__link">
         Home
       </NavLink>
       <NavLink to="/movie_list" className="Nav__link">
@@ -31,6 +31,19 @@ export const Nav: React.FC = () => {
             <NavLink to="/profile" className="Nav__link">
               Profile
             </NavLink>
+          )
+      }
+      {
+        user?.role === 'admin'
+          && (
+            <>
+              <NavLink to="/add_movie" className="Nav__link">
+                Add movie
+              </NavLink>
+              <NavLink to="/edit_movie_list" className="Nav__link">
+                Edit list
+              </NavLink>
+            </>
           )
       }
     </div>

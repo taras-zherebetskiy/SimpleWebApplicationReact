@@ -1,0 +1,15 @@
+.AdminAddMovie {
+  display: grid;
+  grid-template: auto / 1fr 400px;
+  column-gap: 20px;
+  min-height: 100vh;
+
+  &__page-content {
+    padding: 20px;
+  }
+
+  &__sidebar {
+    padding: 20px;
+    border-left: 1px solid lightgray;
+  }
+}
